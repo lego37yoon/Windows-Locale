@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/prevent-abbreviations, array-callback-return */
-const fs = require('fs')
-const PDFParser = require('pdf2json')
+import { writeFileSync } from 'node:fs'
+import PDFParser from 'pdf2json'
 
 const filename = '[MS-LCID].pdf'
 const pdfParser = new PDFParser()
@@ -18,31 +18,31 @@ pdfParser.on('pdfParser_dataReady', pdfData => {
 		tag: null,
 		version: null
 	}
-	const defaultKyes = Object.keys(defaultData).reverse()
+	const defaultKeys = Object.keys(defaultData).reverse()
 
 	let data = []
 	let y // Line
 	let check
 	let pdf
 
-	for (let i = 41; i < 68; i++) { // 68
+	// for 16.0, language codes are described between page 31 to 59
+	for (let i = 30; i < 59; i++) {
 		y = []
 		check = false
 		pdf = pdfData.formImage.Pages[i].Texts
 
 		pdf = pdf.filter(e => {
-			if (e.R && e.R && e.R[0].T) {
+			if (e.R && e.R[0].T) {
 				if (e.R[0].T === 'Language') {
 					check = true
 				}
-
 				return check
 			}
 
 			return false
 		})
 
-		pdf = pdf.map(e => {
+		pdf = pdf.map((e, idx, arr) => {
 			const res = {}
 			const indexY = y.indexOf(e.y)
 			const indexX = x.indexOf(x.find(r => e.x >= r))
@@ -55,6 +55,13 @@ pdfParser.on('pdfParser_dataReady', pdfData => {
 			}
 
 			res.x = indexX
+
+			// Check if contents have next line
+			if (res.x !== 2 && res.x !== 0 && res.y > 1 && arr.length !== idx + 1) {
+				if (arr[idx + 1].y < e.y) {
+					res.y -= 1
+				}				
+			}
 
 			res.text = decodeURIComponent(e.R[0].T)
 
@@ -72,10 +79,14 @@ pdfParser.on('pdfParser_dataReady', pdfData => {
 
 		pdf = pdf.map(e => {
 			return e.reduce((total, element) => {
-				if (total[defaultKyes[element.x]]) {
-					total[defaultKyes[element.x]] += element.text
+				if (total[defaultKeys[element.x]]) {
+					if (total[defaultKeys[element.x]].endsWith(" ") || total[defaultKeys[element.x]].endsWith("-") || element.x === 1) {
+						total[defaultKeys[element.x]] += element.text						
+					} else {
+						total[defaultKeys[element.x]] += ` ${element.text}`
+					}
 				} else {
-					total[defaultKyes[element.x]] = element.text
+					total[defaultKeys[element.x]] = element.text
 				}
 
 				return total
@@ -96,7 +107,7 @@ pdfParser.on('pdfParser_dataReady', pdfData => {
 		output[e.tag.toLowerCase()] = {...e}
 	})
 
-	fs.writeFileSync('./index.json', JSON.stringify(output, null, '\t'))
+	writeFileSync('./index.json', JSON.stringify(output, null, '\t'))
 	console.timeEnd('build in')
 })
 
