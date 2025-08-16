@@ -47,7 +47,7 @@ Get Windows Language Code Identifier (LCID) information
 - version (String)
 
 ### Source
-**NOTE:** Source is [winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-LCID/%5bMS-LCID%5d.pdf](https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-LCID/%5bMS-LCID%5d.pdf)
+**NOTE:** Source is [winprotocoldocs-bhdugrdyduf5h2e4.b02.azurefd.net/MS-LCID/%5bMS-LCID%5d.pdf](https://winprotocoldocs-bhdugrdyduf5h2e4.b02.azurefd.net/MS-LCID/%5bMS-LCID%5d.pdf). Referenced by [Microsoft Learn Document](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/70feba9f-294e-491e-b6eb-56532684c37f)
 
 ## Dependencies
 
