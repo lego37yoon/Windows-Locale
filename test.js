@@ -1,10 +1,10 @@
-const locale = require('.')
-const assert = require('assert')
+import locale from './index.json'
+import { equal } from 'assert'
 
-assert.equal(locale['pt-br'].language, 'Portuguese')
-assert.equal(locale['pt-br'].location, 'Brazil')
-assert.equal(locale['pt-br'].id, 1046)
-assert.equal(locale['pt-br'].tag, 'pt-BR')
-assert.equal(locale['pt-br'].version, 'Release A')
+equal(locale['pt-br'].language, 'Portuguese')
+equal(locale['pt-br'].location, 'Brazil')
+equal(locale['pt-br'].id, 1046)
+equal(locale['pt-br'].tag, 'pt-BR')
+equal(locale['pt-br'].version, 'Release A')
 
 console.log('Done!')

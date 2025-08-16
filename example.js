@@ -1,4 +1,4 @@
-const locale = require('.')
+import locale from './index.json'
 
 console.log(locale['pt-br'])
 /*
